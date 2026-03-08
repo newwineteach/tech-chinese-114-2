@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unit 1 校園 AI 助手提案 - 114-2 科技華語</title>
+    <!-- 引入 Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- 引入 React 與 ReactDOM -->
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- 引入 Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#0d9488', // Teal 600
+                        secondary: '#14b8a6', // Teal 500
+                        bglight: '#f0fdfa', // Teal 50
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'PingFang TC', 'Heiti TC', 'Microsoft JhengHei', sans-serif;
+            background-color: #f8fafc;
+        }
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+
+    <script type="text/babel">
+        // --- SVG 圖示組件 ---
+        const IconHome = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>;
+        const IconArrowLeft = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>;
+        const IconPain = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-red-500"><circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/><line x1="9" x2="9.01" y1="9" y2="9"/><line x1="15" x2="15.01" y1="9" y2="9"/></svg>;
+        const IconSolution = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-yellow-500"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.2 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>;
+        const IconRisk = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-purple-500"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg>;
+        const IconBusiness = () => <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-500"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>;
+        const IconUser = () => <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-primary"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>;
+        const IconLightbulb = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-300"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.2 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>;
+
+        // --- 資料設定 ---
+        const proposals = [
+            {
+                name: "錦春",
+                title: "AI 提醒助手",
+                pain: "很多學生因為課業忙碌，常常忘記作業的截止日期，或者忘記考試時間。",
+                solution: "我們設計一個AI提醒助手。學生輸入交作業或考試時間，AI會在前兩天提醒一次，在前一天提醒兩次，幫助學生準時完成作業。",
+                risk: "如果忘記輸入或者不小心輸入的資料錯誤，AI可能會提醒錯誤的時間。",
+                business: "免費"
+            },
+            {
+                name: "威利",
+                title: "智能選課助手",
+                pain: "不知道要選什麼課",
+                solution: "幫你選課，給你看你會喜歡的課程",
+                risk: "AI找不到課或者推薦不好的課",
+                business: "完全免費無廣告，其他的大學生也可以使用"
+            },
+            {
+                name: "秋水",
+                title: "畢業學分精算師",
+                pain: "大三大四同學都要跟助教確認自己的畢業學分， 有點麻煩， 浪費自己及助教時間",
+                solution: "學生只要輸入「姓名」，「學號」，「系所」，我會仔細設計每一個系所的畢業門檻，例如華語系A班跟B班的畢業學分不一樣讓AI了解，AI會幫我們算一算畢業學分。",
+                risk: "沒有",
+                business: "免費"
+            },
+            {
+                name: "秋莊",
+                title: "學長姐 AI ——「校園生存指南」",
+                isFullText: true,
+                content: `🌟 產品概念\n我們設計的不只是冷冰冰的 AI 工具，而是一位 24 小時在線的「虛擬學長姐」。\n他／她：✔ 不會已讀不回 ✔ 不會嫌你問題笨 ✔ 永遠記得你的課表 ✔ 比你還清楚學校規定\n\n一、痛點分析（用故事開場）\n想像一下，大一新生第一天進校園：不知道選什麼課、聽不懂教授在說什麼、不知道報告怎麼開始、找不到教室、不敢問學長姐。\n👉 其實不是學生不努力，而是「沒有人帶」。所以我們創造一位 AI 學長姐，陪你從大一走到畢業。\n\n二、產品功能（用對話方式呈現）\n功能一：選課救星 (整理歷年評價、分析作業量、給出推薦指數)\n功能二：報告陪跑員 (產生報告大綱、建議分段架構、提供關鍵字方向、提醒引用來源)\n功能三：拖延症剋星 (主動提醒報告進度)\n功能四：小組軍師 (分析分工方式、安排進度表)\n\n三、優勢與風險\n✅ 優勢：減少焦慮、提升效率、降低選錯課機率、強化時間管理能力\n⚠️ 風險：學生過度依賴、可能出現錯誤資訊、學術倫理問題\n👉 解決方式：明確標示「僅供參考」、加入抄襲偵測提醒、設置使用紀錄與資料保護機制\n\n四、定價與推廣\n💰 定價：新生免費試用 1 個月，每學期 99 元\n📢 推廣：新生訓練營展示、校園社群宣傳、找學生會合作\n\n💡 結尾金句：「與其讓學生一個人跌跌撞撞成長，不如給他一位永遠在線的學長姐。我們的 AI，不是取代人，而是陪伴人。」`
+            },
+            {
+                name: "玉華",
+                title: "圖書館找書小幫手",
+                pain: "每一次想借圖書館的書時，常常不是找不到想讀的書，就是已經有人借走了。",
+                solution: "學生只要輸入「書名」與「作者」的指令，AI會自動找出你想讀的書，也順便介紹類似內容的書本。",
+                risk: "如果系統資料沒有即時更新，可能會顯示錯誤的館藏資訊，導致學生撲空。",
+                business: "基本查詢與推薦功能免費，吸引學生使用；未來可與圖書館合作，發展進階通知或個人化閱讀分析功能。"
+            },
+            {
+                name: "慧福",
+                title: "校園美食防焦慮 APP",
+                pain: "我們通常不知道學院裡有什麼東西可以吃。而且常常學生無法決定要吃什麼。我們的決策能力越來越差，很多學生因為不知道要吃什麼會感到焦慮。",
+                solution: "我的AI助手會提供所有餐廳的位置、菜單、價格與大家的評論。如果使用者不能確定要吃什麼，APP會替他隨機選擇並給方向。還能幫使用者看到哪些位置有人或哪家餐廳不用排隊。",
+                risk: "別人的評論有時可能造成餐廳的客戶流失，導致餐廳員工的失業威脅。",
+                business: "每學期70塊。如果有1000個學生訂閱就能得到七萬。如果使用者買100塊的訂閱，還可以提前預約座位。"
+            },
+            {
+                name: "中元",
+                title: "學分小鬧鐘",
+                pain: "學生常搞不清楚自己還差幾個學分才能畢業。規則太複雜，怕算錯會導致「延畢」。",
+                solution: "只要輸入「我還缺什麼課？」，AI就會幫你查。AI會自動對照你的成績單，列出你還沒修完的必修和通識課。",
+                risk: "如果 AI 抓錯資料，可能會給錯誤的建議；也要小心個人隱私外洩。",
+                business: "基礎檢查「免費」；如果要 AI 幫你「自動排課表」，每學期收 50 元。推廣：告訴學校這能減少助教工作量，讓學校更現代化。"
+            },
+            {
+                name: "黃氏垂莊",
+                title: "課表與教室鬧鐘",
+                pain: "老師與學生每天上課前都要確認今天要上什麼課，在哪間教室，導致很多麻煩。",
+                solution: "軟體的功能是鬧鐘，可以在前一晚或者前30分鐘發通知給使用者，告訴他們等等有什麼課、在哪間教室。讓使用者生活上比較主動、有準備。",
+                risk: "忽然換教室可能有先在系統設定的問題。",
+                business: "免費"
+            },
+            {
+                name: "A.A. de Vries 達艾莉",
+                title: "課程專屬問答 AI",
+                pain: "有時候學生關於課程有問題，問老師幾次會麻煩到他們。",
+                solution: "輸入他們的問題，AI會把所有的資料整理並回答問題。",
+                risk: "可能上傳的課程資料有問題，導致發布錯誤的資訊。",
+                business: "免費"
+            },
+            {
+                name: "美怜",
+                title: "公館找教室 AI",
+                pain: "開始上課的第一週（特別是公館校區）不知道教室在哪裡。",
+                solution: "輸入「地方」的指令，AI會自動仔細地告訴我們位置。",
+                risk: "網路不好可能無法使用的問題。",
+                business: "免費"
+            },
+            {
+                name: "任允雅",
+                title: "授權碼即時通知 App",
+                pain: "有時候在線上看到老師會發授權碼，但實際上老師不發，讓學生混亂、浪費時間。有時候老師只給特定學生，其他學生到教室才知道，感到失望。",
+                solution: "老師可在App上直接公告授權碼，學生即時收到通知。可標示授權碼適用對象，避免資訊混亂。已經上過課的學生可分享經驗與小提醒。",
+                risk: "可能只集中在一些特定的科目。",
+                business: "免費"
+            },
+            {
+                name: "松村大知",
+                title: "即時畢業門檻系統",
+                pain: "畢業授課條件規則很複雜，學生難以即時掌握自己學分進度。",
+                solution: "導入自動匯入修課資料的系統，並即時生成分類表，清楚顯示是否達成畢業門檻。",
+                risk: "如果資料不更新，可能會導致錯誤判斷。",
+                business: "免費"
+            },
+            {
+                name: "桜",
+                title: "教室路線地圖 AI",
+                pain: "每個學期剛開學的時候找不到教室，所以有時候會遲到，也會浪費時間。",
+                solution: "學生只要輸入時間與課程名稱的指令，AI 會幫我顯示到教室的路線和地圖。",
+                risk: "可能提供錯誤的路線。",
+                business: "免費"
+            },
+            {
+                name: "美玲",
+                title: "關於 TikTok 影響的探討",
+                isFullText: true,
+                content: `近幾年來，TikTok 成為一個非常流行的應用程式，它不僅可以用來製作影片，還能進行線上購物與商品買賣。然而，不少人擔憂 TikTok 會對年輕人帶來不良影響。\n\n目前大約有 36 萬人使用 TikTok。雖然它帶來許多娛樂效果，讓人紓解壓力，在辛苦學習或工作後得到放鬆，不過，現在 TikTok 平台上傳的訊息大多來源不明，這容易讓人誤信假新聞。\n\n總而言之，回頭來看，TikTok 確實為我們帶來許多好處，不僅是一種紓壓方式，也是一個網路購物的平台。雖然人們擔心它會對年輕人產生負面影響，例如讓人沉迷，或散播來源不明的訊息，但我個人認為，這個應用程式本身並不是問題。它對年輕人的影響，取決於我們是否能夠理性評估風險並善加利用。`
+            }
+        ];
+
+        // --- 組件 ---
+
+        // 提案卡片組件
+        const ProposalCard = ({ data }) => {
+            return (
+                <div className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-shadow duration-300 border border-slate-100 overflow-hidden fade-in flex flex-col h-full hover:-translate-y-1 transform">
+                    {/* 卡片頂部裝飾條 */}
+                    <div className="h-1.5 w-full bg-gradient-to-r from-teal-400 to-teal-600"></div>
+
+                    {/* 卡片標題區 */}
+                    <div className="bg-gradient-to-r from-bglight to-white p-5 border-b border-slate-100 flex items-center justify-between">
+                        <div className="flex items-center space-x-3">
+                            <div className="w-10 h-10 rounded-full bg-teal-100 flex items-center justify-center shadow-inner">
+                                <IconUser />
+                            </div>
+                            <div>
+                                <h3 className="font-bold text-slate-800 text-lg">{data.name}</h3>
+                                {data.title && <p className="text-sm text-primary font-medium">{data.title}</p>}
+                            </div>
+                        </div>
+                        {data.business && data.business.includes("免費") && !data.isFullText && (
+                            <span className="bg-green-100 text-green-700 text-xs px-2.5 py-1 rounded-full font-medium shadow-sm border border-green-200">免費方案</span>
+                        )}
+                    </div>
+
+                    {/* 卡片內容區 */}
+                    <div className="p-6 flex-1 space-y-5 text-slate-600 text-sm leading-relaxed">
+                        {data.isFullText ? (
+                            <div className="whitespace-pre-wrap">{data.content}</div>
+                        ) : (
+                            <>
+                                {data.pain && (
+                                    <div className="space-y-2">
+                                        <div className="flex items-center text-slate-800 font-semibold space-x-2">
+                                            <div className="p-1 bg-red-50 rounded-lg"><IconPain /></div> <span>痛點分析</span>
+                                        </div>
+                                        <p className="pl-8 text-slate-600">{data.pain}</p>
+                                    </div>
+                                )}
+                                {data.solution && (
+                                    <div className="space-y-2">
+                                        <div className="flex items-center text-slate-800 font-semibold space-x-2">
+                                            <div className="p-1 bg-yellow-50 rounded-lg"><IconSolution /></div> <span>產品功能</span>
+                                        </div>
+                                        <p className="pl-8 text-slate-600">{data.solution}</p>
+                                    </div>
+                                )}
+                                {data.risk && (
+                                    <div className="space-y-2">
+                                        <div className="flex items-center text-slate-800 font-semibold space-x-2">
+                                            <div className="p-1 bg-purple-50 rounded-lg"><IconRisk /></div> <span>風險評估</span>
+                                        </div>
+                                        <p className="pl-8 text-slate-600">{data.risk}</p>
+                                    </div>
+                                )}
+                                {data.business && (
+                                    <div className="space-y-2">
+                                        <div className="flex items-center text-slate-800 font-semibold space-x-2">
+                                            <div className="p-1 bg-green-50 rounded-lg"><IconBusiness /></div> <span>定價推廣</span>
+                                        </div>
+                                        <p className="pl-8 text-slate-600">{data.business}</p>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+                </div>
+            );
+        };
+
+        // Unit 1 頁面組件
+        const Unit1Page = () => {
+            return (
+                <div className="max-w-6xl mx-auto px-4 py-8 fade-in">
+                    {/* 返回按鈕與標題 */}
+                    <a href="index.html" className="inline-flex items-center space-x-2 text-slate-500 hover:text-primary transition-colors mb-8 group">
+                        <div className="p-2 rounded-full group-hover:bg-teal-50 transition-colors">
+                            <IconArrowLeft />
+                        </div>
+                        <span className="font-medium">返回課程首頁</span>
+                    </a>
+
+                    <div className="mb-12 text-center">
+                        <span className="inline-block py-1.5 px-4 rounded-full bg-teal-100 text-primary text-sm font-bold mb-4 tracking-wider shadow-sm">UNIT 1</span>
+                        <h1 className="text-3xl md:text-5xl font-extrabold text-slate-800 mb-4 tracking-tight">校園 AI 助手提案</h1>
+                        <p className="text-slate-500 max-w-2xl mx-auto text-lg">本單元透過 PBL (Project-Based Learning) 專題任務，引導學生觀察校園生活痛點，並提出具創意的 AI 解決方案與商業模式。</p>
+                    </div>
+
+                    {/* 德全的提案指南 (Highlight Box) */}
+                    <div className="bg-gradient-to-br from-slate-800 to-slate-900 rounded-3xl p-6 md:p-10 mb-14 text-white shadow-2xl relative overflow-hidden">
+                        {/* 背景裝飾光暈 */}
+                        <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 rounded-full bg-teal-500 opacity-10 blur-3xl"></div>
+                        <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-64 h-64 rounded-full bg-blue-500 opacity-10 blur-3xl"></div>
+                        
+                        <div className="relative z-10">
+                            <div className="flex items-center space-x-3 mb-4">
+                                <IconLightbulb />
+                                <h2 className="text-2xl font-bold text-teal-300">提案的四大核心支柱 (指導原則)</h2>
+                            </div>
+                            <p className="text-slate-300 mb-8 text-base">以下由 <span className="text-white font-medium bg-white/10 px-2 py-0.5 rounded">德全</span> 同學整理分享，為整個專案的評估框架：</p>
+                            
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/50 hover:bg-slate-800 transition-colors">
+                                    <h3 className="text-teal-400 font-bold mb-2 flex items-center text-lg"><IconPain/> <span className="ml-2">1. 痛點分析 (Pain Point)</span></h3>
+                                    <p className="text-sm text-slate-300 leading-relaxed">這是整個提案的心臟。如果沒有準確抓到對方的痛苦或需求，後面的解決方案再華麗也沒意義。</p>
+                                </div>
+                                <div className="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/50 hover:bg-slate-800 transition-colors">
+                                    <h3 className="text-yellow-400 font-bold mb-2 flex items-center text-lg"><IconSolution/> <span className="ml-2">2. 產品功能 (Solution)</span></h3>
+                                    <p className="text-sm text-slate-300 leading-relaxed">這部分不應只是列出規格，而是要強調「效益」。功能是工具，解決方案才是價值，必須證明功能是針對痛點量身打造的。</p>
+                                </div>
+                                <div className="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/50 hover:bg-slate-800 transition-colors">
+                                    <h3 className="text-purple-400 font-bold mb-2 flex items-center text-lg"><IconRisk/> <span className="ml-2">3. 風險評估 (Risk)</span></h3>
+                                    <p className="text-sm text-slate-300 leading-relaxed">這是最容易被忽視卻也最能展現專業度的一環。主動提出風險，代表你考慮周全，不是在畫大餅。</p>
+                                </div>
+                                <div className="bg-slate-800/60 p-5 rounded-2xl border border-slate-700/50 hover:bg-slate-800 transition-colors">
+                                    <h3 className="text-green-400 font-bold mb-2 flex items-center text-lg"><IconBusiness/> <span className="ml-2">4. 定價推廣 (Business)</span></h3>
+                                    <p className="text-sm text-slate-300 leading-relaxed">這是在談論「資源分配」與「成效回報」。提案不能只談理想必須落地，包含成本投入與如何將價值極大化。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* 學生提案網格 */}
+                    <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200">
+                        <h2 className="text-2xl font-bold text-slate-800">學生提案總覽</h2>
+                        <span className="text-sm text-primary bg-teal-50 px-4 py-1.5 rounded-full font-semibold border border-teal-100">共 {proposals.length} 份作品</span>
+                    </div>
+                    
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        {proposals.map((item, index) => (
+                            <ProposalCard key={index} data={item} />
+                        ))}
+                    </div>
+                </div>
+            );
+        };
+
+        // 主要 App 組件
+        const App = () => {
+            return (
+                <div className="min-h-screen flex flex-col">
+                    {/* Navigation Bar */}
+                    <nav className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-50">
+                        <div className="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+                            <a href="index.html" className="flex items-center space-x-2 cursor-pointer hover:opacity-80 transition-opacity">
+                                <div className="w-8 h-8 bg-gradient-to-br from-teal-400 to-primary text-white rounded-lg flex items-center justify-center font-bold shadow-sm">
+                                    科
+                                </div>
+                                <span className="font-bold text-slate-800 text-lg tracking-wide">114-2 科技華語</span>
+                            </a>
+                            
+                            <div className="text-sm font-medium text-slate-600 bg-slate-100 px-4 py-1.5 rounded-full flex items-center shadow-sm">
+                                <IconHome /> <span className="ml-2">單元作業</span>
+                            </div>
+                        </div>
+                    </nav>
+
+                    {/* Main Content */}
+                    <main className="flex-1">
+                        <Unit1Page />
+                    </main>
+
+                    {/* Footer */}
+                    <footer className="bg-white border-t border-slate-200 py-10 mt-12 text-center text-slate-500 text-sm">
+                        <div className="max-w-6xl mx-auto px-4 flex flex-col items-center">
+                            <div className="w-10 h-1 bg-slate-200 rounded-full mb-6"></div>
+                            <p className="font-medium text-slate-600 mb-1">© 2026 114-2 科技華語課程專案。保留所有權利。</p>
+                            <p className="text-slate-400">Powered by React & Tailwind CSS</p>
+                        </div>
+                    </footer>
+                </div>
+            );
+        };
+
+        // 渲染 App
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
