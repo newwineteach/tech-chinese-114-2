@@ -56,8 +56,17 @@
         const IconLightbulb = () => <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-teal-300"><path d="M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.9 1.2 1.5 1.5 2.5"/><path d="M9 18h6"/><path d="M10 22h4"/></svg>;
 
         // --- 資料設定 ---
+        const categories = [
+            { id: 'academic', name: '📚 課業與學術輔助', desc: '選課建議、學分計算與課程問答相關應用' },
+            { id: 'navigation', name: '🗺️ 尋路與校園導航', desc: '解決找不到教室與認識校園環境的困擾' },
+            { id: 'time', name: '⏰ 任務與時間管理', desc: '作業、活動與課表等重要時程提醒' },
+            { id: 'life', name: '🏡 實用生活與資源', desc: '美食、租屋、宿舍與圖書館等校園生活支援' },
+            { id: 'other', name: '💭 綜合議題探討', desc: '科技與社群媒體對學生的影響分析' }
+        ];
+
         const proposals = [
             {
+                categoryId: "time",
                 name: "錦春",
                 title: "AI 提醒助手",
                 pain: "很多學生因為課業忙碌，常常忘記作業的截止日期，或者忘記考試時間。",
@@ -66,6 +75,7 @@
                 business: "免費"
             },
             {
+                categoryId: "academic",
                 name: "威利",
                 title: "智能選課助手",
                 pain: "不知道要選什麼課",
@@ -74,6 +84,7 @@
                 business: "完全免費無廣告，其他的大學生也可以使用"
             },
             {
+                categoryId: "academic",
                 name: "秋水",
                 title: "畢業學分精算師",
                 pain: "大三大四同學都要跟助教確認自己的畢業學分， 有點麻煩， 浪費自己及助教時間",
@@ -82,12 +93,14 @@
                 business: "免費"
             },
             {
+                categoryId: "academic",
                 name: "秋莊",
                 title: "學長姐 AI ——「校園生存指南」",
                 isFullText: true,
                 content: `🌟 產品概念\n我們設計的不只是冷冰冰的 AI 工具，而是一位 24 小時在線的「虛擬學長姐」。\n他／她：✔ 不會已讀不回 ✔ 不會嫌你問題笨 ✔ 永遠記得你的課表 ✔ 比你還清楚學校規定\n\n一、痛點分析（用故事開場）\n想像一下，大一新生第一天進校園：不知道選什麼課、聽不懂教授在說什麼、不知道報告怎麼開始、找不到教室、不敢問學長姐。\n👉 其實不是學生不努力，而是「沒有人帶」。所以我們創造一位 AI 學長姐，陪你從大一走到畢業。\n\n二、產品功能（用對話方式呈現）\n功能一：選課救星 (整理歷年評價、分析作業量、給出推薦指數)\n功能二：報告陪跑員 (產生報告大綱、建議分段架構、提供關鍵字方向、提醒引用來源)\n功能三：拖延症剋星 (主動提醒報告進度)\n功能四：小組軍師 (分析分工方式、安排進度表)\n\n三、優勢與風險\n✅ 優勢：減少焦慮、提升效率、降低選錯課機率、強化時間管理能力\n⚠️ 風險：學生過度依賴、可能出現錯誤資訊、學術倫理問題\n👉 解決方式：明確標示「僅供參考」、加入抄襲偵測提醒、設置使用紀錄與資料保護機制\n\n四、定價與推廣\n💰 定價：新生免費試用 1 個月，每學期 99 元\n📢 推廣：新生訓練營展示、校園社群宣傳、找學生會合作\n\n💡 結尾金句：「與其讓學生一個人跌跌撞撞成長，不如給他一位永遠在線的學長姐。我們的 AI，不是取代人，而是陪伴人。」`
             },
             {
+                categoryId: "life",
                 name: "玉華",
                 title: "圖書館找書小幫手",
                 pain: "每一次想借圖書館的書時，常常不是找不到想讀的書，就是已經有人借走了。",
@@ -96,6 +109,7 @@
                 business: "基本查詢與推薦功能免費，吸引學生使用；未來可與圖書館合作，發展進階通知或個人化閱讀分析功能。"
             },
             {
+                categoryId: "life",
                 name: "慧福",
                 title: "校園美食防焦慮 APP",
                 pain: "我們通常不知道學院裡有什麼東西可以吃。而且常常學生無法決定要吃什麼。我們的決策能力越來越差，很多學生因為不知道要吃什麼會感到焦慮。",
@@ -104,6 +118,7 @@
                 business: "每學期70塊。如果有1000個學生訂閱就能得到七萬。如果使用者買100塊的訂閱，還可以提前預約座位。"
             },
             {
+                categoryId: "academic",
                 name: "中元",
                 title: "學分小鬧鐘",
                 pain: "學生常搞不清楚自己還差幾個學分才能畢業。規則太複雜，怕算錯會導致「延畢」。",
@@ -112,6 +127,7 @@
                 business: "基礎檢查「免費」；如果要 AI 幫你「自動排課表」，每學期收 50 元。推廣：告訴學校這能減少助教工作量，讓學校更現代化。"
             },
             {
+                categoryId: "time",
                 name: "黃氏垂莊",
                 title: "課表與教室鬧鐘",
                 pain: "老師與學生每天上課前都要確認今天要上什麼課，在哪間教室，導致很多麻煩。",
@@ -120,6 +136,7 @@
                 business: "免費"
             },
             {
+                categoryId: "academic",
                 name: "A.A. de Vries 達艾莉",
                 title: "課程專屬問答 AI",
                 pain: "有時候學生關於課程有問題，問老師幾次會麻煩到他們。",
@@ -128,6 +145,7 @@
                 business: "免費"
             },
             {
+                categoryId: "navigation",
                 name: "美怜",
                 title: "公館找教室 AI",
                 pain: "開始上課的第一週（特別是公館校區）不知道教室在哪裡。",
@@ -136,6 +154,7 @@
                 business: "免費"
             },
             {
+                categoryId: "academic",
                 name: "任允雅",
                 title: "授權碼即時通知 App",
                 pain: "有時候在線上看到老師會發授權碼，但實際上老師不發，讓學生混亂、浪費時間。有時候老師只給特定學生，其他學生到教室才知道，感到失望。",
@@ -144,6 +163,7 @@
                 business: "免費"
             },
             {
+                categoryId: "academic",
                 name: "松村大知",
                 title: "即時畢業門檻系統",
                 pain: "畢業授課條件規則很複雜，學生難以即時掌握自己學分進度。",
@@ -152,6 +172,7 @@
                 business: "免費"
             },
             {
+                categoryId: "navigation",
                 name: "桜",
                 title: "教室路線地圖 AI",
                 pain: "每個學期剛開學的時候找不到教室，所以有時候會遲到，也會浪費時間。",
@@ -160,12 +181,14 @@
                 business: "免費"
             },
             {
+                categoryId: "other",
                 name: "美玲",
                 title: "關於 TikTok 影響的探討",
                 isFullText: true,
                 content: `近幾年來，TikTok 成為一個非常流行的應用程式，它不僅可以用來製作影片，還能進行線上購物與商品買賣。然而，不少人擔憂 TikTok 會對年輕人帶來不良影響。\n\n目前大約有 36 萬人使用 TikTok。雖然它帶來許多娛樂效果，讓人紓解壓力，在辛苦學習或工作後得到放鬆，不過，現在 TikTok 平台上傳的訊息大多來源不明，這容易讓人誤信假新聞。\n\n總而言之，回頭來看，TikTok 確實為我們帶來許多好處，不僅是一種紓壓方式，也是一個網路購物的平台。雖然人們擔心它會對年輕人產生負面影響，例如讓人沉迷，或散播來源不明的訊息，但我個人認為，這個應用程式本身並不是問題。它對年輕人的影響，取決於我們是否能夠理性評估風險並善加利用。`
             },
             {
+                categoryId: "time",
                 name: "Khanya Nobuhle",
                 title: "校園活動提醒助手",
                 pain: "很多剛來的學生不清楚學校活動資訊，常常錯過重要活動與時間。大學生常常分不清楚該看不該看的訊息是哪一些，因為校園資訊太多（Email、Line、學校網頁），這些都造成學生的不方便也浪費大家的時間，錯過重要訊息。",
@@ -174,12 +197,31 @@
                 business: "免費"
             },
             {
+                categoryId: "life",
                 name: "Kunene Angel Nosipho",
                 title: "外籍生租屋助手",
                 pain: "外國人在台灣找房子時，常因語言不通與缺乏資料而感到困難。許多租屋資訊只有中文，理解有門檻，也容易浪費很多時間。",
                 solution: "使用者輸入「地點」與「預算」，AI 會收集租屋資料並整理合適的房源，也提供翻譯與租屋流程說明。",
                 risk: "AI 可能取代部分房仲工作，造成失業。若資料不準確，也可能帶來資訊威脅並引起使用者恐慌，因此需要仔細評估。",
                 business: "基本功能免費，高級功能如更逼真的房屋模擬與翻譯服務可採訂閱制收費。"
+            },
+            {
+                categoryId: "navigation",
+                name: "阮瓊桂倪",
+                title: "教室分布導航地圖",
+                pain: "師大有兩個校區，學生常常找不到教室或辦公室。",
+                solution: "設計一個針對師大校區的教室分布地圖。只要輸入教室或辦公室名稱，就可以從目前位置導航到教室位置。",
+                risk: "沒有",
+                business: "免費提供給校內學生以及教職員"
+            },
+            {
+                categoryId: "life",
+                name: "孟星林 - Marc-Anthony",
+                title: "「宿舍管理員」的AI助手",
+                pain: "大學生宿舍常常因為誰應該丟垃圾、打掃衛生，室友關係變得非常緊張。",
+                solution: "室友只要說出「誰今天最懶」問AI，它的App就會自動分配家務，並用搞笑的方式提醒每個人完成任務。",
+                risk: "雖然能減少室友衝突，但AI毒舌的評論可能會導致室友關係更加惡化。",
+                business: "免費，每個室友都要用。"
             }
         ];
 
@@ -305,16 +347,37 @@
                         </div>
                     </div>
 
-                    {/* 學生提案網格 */}
+                    {/* 學生提案分類網格 */}
                     <div className="flex items-center justify-between mb-8 pb-4 border-b border-slate-200">
-                        <h2 className="text-2xl font-bold text-slate-800">學生提案總覽</h2>
+                        <h2 className="text-2xl font-bold text-slate-800">學生提案分類總覽</h2>
                         <span className="text-sm text-primary bg-teal-50 px-4 py-1.5 rounded-full font-semibold border border-teal-100">共 {proposals.length} 份作品</span>
                     </div>
                     
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        {proposals.map((item, index) => (
-                            <ProposalCard key={index} data={item} />
-                        ))}
+                    <div className="space-y-16">
+                        {categories.map(category => {
+                            const categoryProposals = proposals.filter(p => p.categoryId === category.id);
+                            // 若該分類沒有提案，則不顯示
+                            if (categoryProposals.length === 0) return null;
+                            
+                            return (
+                                <div key={category.id} className="scroll-mt-24">
+                                    <div className="mb-6">
+                                        <h3 className="text-2xl font-bold text-slate-800 flex items-center">
+                                            {category.name}
+                                            <span className="ml-3 text-sm font-medium bg-slate-100 text-slate-500 px-2.5 py-0.5 rounded-full">
+                                                {categoryProposals.length} 份提案
+                                            </span>
+                                        </h3>
+                                        <p className="text-slate-500 mt-2">{category.desc}</p>
+                                    </div>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                        {categoryProposals.map((item, index) => (
+                                            <ProposalCard key={`${category.id}-${index}`} data={item} />
+                                        ))}
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                 </div>
             );
